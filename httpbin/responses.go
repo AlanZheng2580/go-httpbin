@@ -42,6 +42,10 @@ type noBodyResponse struct {
 	Gzipped  bool `json:"gzipped,omitempty"`
 }
 
+type accessTokenResponse struct {
+	AccessToken map[string]interface{} `json:"access_token,omitempty"`
+}
+
 // A generic response for any incoming request that might contain a body (POST,
 // PUT, PATCH, etc).
 type bodyResponse struct {

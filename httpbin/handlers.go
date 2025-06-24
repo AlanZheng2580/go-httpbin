@@ -15,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/mccutchen/go-httpbin/v2/httpbin/digest"
 	"github.com/mccutchen/go-httpbin/v2/httpbin/websocket"
 )
@@ -1289,4 +1290,39 @@ func (h *HTTPBin) WebSocketEcho(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ws.Serve(websocket.EchoHandler)
+}
+
+func decodeJWT(tokenString string) (map[string]interface{}, error) {
+	token, _, err := new(jwt.Parser).ParseUnverified(tokenString, jwt.MapClaims{})
+	if err != nil {
+		return nil, fmt.Errorf("invalid token: %v", err)
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		return claims, nil
+	} else {
+		return nil, fmt.Errorf("invalid claims")
+	}
+}
+
+// Get handles HTTP GET requests
+func (h *HTTPBin) XForwardedAccessToken(w http.ResponseWriter, r *http.Request) {
+	var decodedToken map[string]interface{}
+	var tokenString string
+	var err error
+	if tokenString = r.Header.Get("X-Forwarded-Access-Token"); tokenString == "" {
+		writeError(w, http.StatusBadRequest, fmt.Errorf("Missing X-Forwarded-Access-Token header, error: %v", err))
+		return
+	}
+
+	if decodedToken, err = decodeJWT((tokenString)); err != nil {
+		writeError(w, http.StatusBadRequest, fmt.Errorf("invalid JWT, error: %v", err))
+		return
+	}
+
+	resp := accessTokenResponse{
+		AccessToken: decodedToken,
+	}
+
+	writeJSON(http.StatusOK, w, &resp)
 }

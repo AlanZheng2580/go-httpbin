@@ -141,6 +141,7 @@ func (h *HTTPBin) Handler() http.Handler {
 	mux.HandleFunc("PATCH /patch", h.RequestWithBody)
 	mux.HandleFunc("POST /post", h.RequestWithBody)
 	mux.HandleFunc("PUT /put", h.RequestWithBody)
+	mux.HandleFunc("GET /x-forwarded-access-token", h.XForwardedAccessToken)
 
 	// Endpoints that accept any methods
 	mux.HandleFunc("/absolute-redirect/{numRedirects}", h.AbsoluteRedirect)

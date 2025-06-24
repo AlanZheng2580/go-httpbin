@@ -1,7 +1,7 @@
 # The version that will be used in docker tags (e.g. to push a
 # go-httpbin:latest image use `make imagepush VERSION=latest)`
-VERSION    ?= $(shell git rev-parse --short HEAD)
-DOCKER_TAG ?= mccutchen/go-httpbin:$(VERSION)
+VERSION    ?= $(shell date +%Y%m%d)-$(shell git rev-parse --short=8 HEAD)
+DOCKER_TAG ?= cyching/go-httpbin:$(VERSION)
 
 # Built binaries will be placed here
 DIST_PATH  	  ?= dist
