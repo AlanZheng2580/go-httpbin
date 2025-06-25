@@ -183,6 +183,7 @@ func (h *HTTPBin) Handler() http.Handler {
 	mux.HandleFunc("/relative-redirect/{numRedirects}", h.RelativeRedirect)
 	mux.HandleFunc("/response-headers", h.ResponseHeaders)
 	mux.HandleFunc("/robots.txt", h.Robots)
+	mux.HandleFunc("/secdn-cdn-cookie", h.SecdnCdnCookie)
 	mux.HandleFunc("/sse", h.SSE)
 	mux.HandleFunc("/status/{code}", h.Status)
 	mux.HandleFunc("/stream-bytes/{numBytes}", h.StreamBytes)
